@@ -10,7 +10,7 @@ class UserController {
             password: Yup.string().required().min(6),
         });
         if (!(await schema.isValid(req.body))) {
-            return res.status(400).json({ error: 'Validation fails' });
+            return res.status(400).json({ error: 'Validação falhou' });
         }
 
         const userExists = await User.findOne({
