@@ -1,4 +1,5 @@
 import Sequelize, { Model } from 'sequelize';
+import { isBefore, subHours } from 'date-fns';
 import User from './User';
 
 class Appointment extends Model {
@@ -7,6 +8,18 @@ class Appointment extends Model {
             {
                 date: Sequelize.DATE, // campos nao primary key e nem created ou updated at
                 canceled_at: Sequelize.DATE,
+                past: {
+                    type: Sequelize.VIRTUAL,
+                    get() {
+                        return isBefore(this.date, new Date());
+                    },
+                },
+                cancelable: {
+                    type: Sequelize.VIRTUAL,
+                    get() {
+                        return isBefore(new Date(), subHours(this.date, 2));
+                    },
+                },
             },
             {
                 sequelize,
